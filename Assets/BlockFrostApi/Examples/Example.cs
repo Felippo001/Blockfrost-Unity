@@ -1,6 +1,6 @@
 using UnityEngine;
 using Blockfrost.ResponseTypes.Error;
-
+using Blockfrost;
 
 namespace Blockfrost.Examples {
     public class Example : MonoBehaviour
@@ -10,7 +10,9 @@ namespace Blockfrost.Examples {
         {
             var api = new BlockfrostApi(
                 "<api-key>",
-                false // mainnet = false, testnet = true
+                false 
+                // mainnet = false
+                // testnet = true
             );
 
             var myAsset = await api.SpecificAsset(
