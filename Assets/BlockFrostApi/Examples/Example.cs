@@ -10,9 +10,10 @@ namespace Blockfrost.Examples {
         {
             var api = new BlockfrostApi(
                 "<api-key>",
-                false 
-                // mainnet = false
-                // testnet = true
+                BlockfrostNetwork.Mainnet 
+                // BlockfrostNetwork.Preview 
+                // BlockfrostNetwork.Preprod
+                // ... 
             );
 
             var myAsset = await api.SpecificAsset(

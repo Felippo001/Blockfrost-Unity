@@ -30,18 +30,24 @@ using Blockfrost.ResponseTypes.Utilities;
 namespace Blockfrost {
     public class BlockfrostApi
     {
-        //
-        const string    API_URL_MAINNET = "https://cardano-mainnet.blockfrost.io/api/v0/",
-                        API_URL_TESTNET = "https://cardano-testnet.blockfrost.io/api/v0/";
-
-
         public string apiKey {get; private set;}
-        public bool isTestnet {get; private set;}
+        private string _network;
 
-        public BlockfrostApi(string apiKey, bool isTestnet = false)
+        public BlockfrostApi(string apiKey, BlockfrostNetwork network = 0)
         {
             this.apiKey = apiKey;
-            this.isTestnet = isTestnet;
+            this._network = networkToUrl(network);
+        }
+
+        private string networkToUrl(BlockfrostNetwork n){
+            switch(n){
+                case BlockfrostNetwork.Testnet: return "https://cardano-testnet.blockfrost.io/api/v0";
+                case BlockfrostNetwork.Preprod: return "https://cardano-preprod.blockfrost.io/api/v0";
+                case BlockfrostNetwork.Preview: return "https://cardano-preview.blockfrost.io/api/v0";
+                case BlockfrostNetwork.MilkomedaMainnet: return "https://milkomeda-mainnet.blockfrost.io/api/v0";
+                case BlockfrostNetwork.MilkomedaTestnet: return "https://milkomeda-testnet.blockfrost.io/api/v0";
+                default: return "https://cardano-mainnet.blockfrost.io/api/v0";
+            }
         }
 
         /*
@@ -494,12 +500,16 @@ namespace Blockfrost {
 
         // // // // 
         */
-        
+        private string _url(string urlPath){
+            return _network + urlPath;
+        }
         private async Task<string> Get(string urlPath){
-            string url = (isTestnet ? API_URL_TESTNET : API_URL_MAINNET) + urlPath;
-
+            string url = _url(urlPath);
+            
             var www = UnityWebRequest.Get(url);
             www.SetRequestHeader("project_id", apiKey);
+            Debug.Log(www.GetRequestHeader("project_id"));
+
 
             await www.SendWebRequest();
 
@@ -525,6 +535,7 @@ namespace Blockfrost {
                     
             }
             catch(BlockfrostError e){
+                Debug.Log(response);
                 throw e;
             }
             catch (System.Exception){}
@@ -541,7 +552,7 @@ namespace Blockfrost {
         }
 
         private async Task<string> SubmitCbor(string urlPath, string cbor){
-            string url = (isTestnet ? API_URL_TESTNET : API_URL_MAINNET) + urlPath;
+            string url = _url(urlPath);
 
             var www = UnityWebRequest.Post(url, "");
             www.SetRequestHeader("project_id", apiKey);
@@ -601,6 +612,13 @@ namespace Blockfrost {
         }
     }
 
-
+    public enum BlockfrostNetwork {
+        Mainnet = 0,
+        Testnet,
+        Preprod,
+        Preview,
+        MilkomedaMainnet,
+        MilkomedaTestnet
+    }
 
 }
