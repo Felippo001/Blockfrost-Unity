@@ -15,7 +15,7 @@ namespace Blockfrost.ResponseTypes.Epochs {
         public float a0, rho, tau, decentralisation_param;
         public float? price_mem, price_step;
         public string key_deposit, pool_deposit, extra_entropy, min_utxo, min_pool_cost, nonce, max_tx_ex_mem, max_tx_ex_steps, max_block_ex_mem, max_block_ex_steps, max_val_size, coins_per_utxo_size, coins_per_utxo_word; 
-        public Dictionary<string, Dictionary<string, int>> cost_models;
+        public Dictionary<string, Dictionary<string, System.Numerics.BigInteger>> cost_models;
     }
 
     public class StakeDistributionEntry : StakeDistributionEntryByPool {
